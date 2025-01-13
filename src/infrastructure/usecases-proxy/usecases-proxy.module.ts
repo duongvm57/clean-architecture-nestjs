@@ -24,9 +24,12 @@ import { DatabaseUserRepository } from '../repositories/user.repository';
 import { EnvironmentConfigModule } from '../config/environment-config/environment-config.module';
 import { EnvironmentConfigService } from '../config/environment-config/environment-config.service';
 import { UseCaseProxy } from './usecases-proxy';
+import { ForgotPasswordUsecases } from '../../usecases/auth/forgot-password.usecases';
+import { MailerService } from '@nestjs-modules/mailer';
+import { MailerConfigModule } from '../config/mailer/mailer.config';
 
 @Module({
-  imports: [LoggerModule, JwtModule, BcryptModule, EnvironmentConfigModule, RepositoriesModule, ExceptionsModule],
+  imports: [LoggerModule, JwtModule, BcryptModule, EnvironmentConfigModule, RepositoriesModule, ExceptionsModule, MailerConfigModule],
 })
 export class UsecasesProxyModule {
   // Auth
@@ -39,6 +42,7 @@ export class UsecasesProxyModule {
   static POST_TODO_USECASES_PROXY = 'postTodoUsecasesProxy';
   static DELETE_TODO_USECASES_PROXY = 'deleteTodoUsecasesProxy';
   static PUT_TODO_USECASES_PROXY = 'putTodoUsecasesProxy';
+  static FORGOT_PASSWORD_USECASES_PROXY = 'ForgotPasswordUsecasesProxy';
 
   static register(): DynamicModule {
     return {
@@ -93,6 +97,12 @@ export class UsecasesProxyModule {
           useFactory: (logger: LoggerService, todoRepository: DatabaseTodoRepository) =>
             new UseCaseProxy(new deleteTodoUseCases(logger, todoRepository)),
         },
+        {
+          inject: [MailerService],
+          provide: UsecasesProxyModule.FORGOT_PASSWORD_USECASES_PROXY,
+          useFactory: (mailerService: MailerService) =>
+            new UseCaseProxy(new ForgotPasswordUsecases(mailerService)),
+        },
       ],
       exports: [
         UsecasesProxyModule.GET_TODO_USECASES_PROXY,
@@ -103,6 +113,7 @@ export class UsecasesProxyModule {
         UsecasesProxyModule.LOGIN_USECASES_PROXY,
         UsecasesProxyModule.IS_AUTHENTICATED_USECASES_PROXY,
         UsecasesProxyModule.LOGOUT_USECASES_PROXY,
+        UsecasesProxyModule.FORGOT_PASSWORD_USECASES_PROXY,
       ],
     };
   }

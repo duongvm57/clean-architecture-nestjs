@@ -50,4 +50,32 @@ export class EnvironmentConfigService implements DatabaseConfig, JWTConfig {
   getDatabaseSync(): boolean {
     return this.configService.get<boolean>('DATABASE_SYNCHRONIZE');
   }
+
+  getMailerHost(): string {
+    return this.configService.get<string>('MAILER_HOST');
+  }
+
+  getMailerPort(): number {
+    return this.configService.get<number>('MAILER_PORT');
+  }
+
+  getMailerUser(): string {
+    return this.configService.get<string>('MAILER_USER');
+  }
+
+  getMailerPassword(): string {
+    return this.configService.get<string>('MAILER_PASSWORD');
+  }
+
+  getMailerSecure(): boolean {
+    return this.configService.get<boolean>('MAILER_SECURE');
+  }
+
+  getMailerDefaultName(): string {
+    return this.configService.get<string>('MAILER_DEFAULT_NAME');
+  }
+
+  getMailerDefaultMail(): string {
+    return this.configService.get<string>('MAILER_DEFAULT_EMAIL');
+  }
 }

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Inject, Post, Req, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiExtraModels, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-import { AuthLoginDto } from './auth-dto.class';
+import { AuthLoginDto, ForgotPasswordDto } from './auth-dto.class';
 import { IsAuthPresenter } from './auth.presenter';
 
 import JwtRefreshGuard from '../../common/guards/jwtRefresh.guard';
@@ -15,6 +15,7 @@ import { IsAuthenticatedUseCases } from '../../../usecases/auth/isAuthenticated.
 import { LogoutUseCases } from '../../../usecases/auth/logout.usecases';
 
 import { ApiResponseType } from '../../common/swagger/response.decorator';
+import { ForgotPasswordUsecases } from '../../../usecases/auth/forgot-password.usecases';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -32,6 +33,8 @@ export class AuthController {
     private readonly logoutUsecaseProxy: UseCaseProxy<LogoutUseCases>,
     @Inject(UsecasesProxyModule.IS_AUTHENTICATED_USECASES_PROXY)
     private readonly isAuthUsecaseProxy: UseCaseProxy<IsAuthenticatedUseCases>,
+    @Inject(UsecasesProxyModule.FORGOT_PASSWORD_USECASES_PROXY)
+    private readonly forgotPasswordUseCaseProxy: UseCaseProxy<ForgotPasswordUsecases>,
   ) {}
 
   @Post('login')
@@ -74,5 +77,13 @@ export class AuthController {
     const accessTokenCookie = await this.loginUsecaseProxy.getInstance().getCookieWithJwtToken(request.user.username);
     request.res.setHeader('Set-Cookie', accessTokenCookie);
     return 'Refresh successful';
+  }
+
+  @Post('forgot-password')
+  @ApiOperation({ description: 'forgot-password' })
+  @ApiBody({ type: ForgotPasswordDto })
+  async forgotPassword(@Body() forgotPasswordDto: ForgotPasswordDto): Promise<string> {
+    await this.forgotPasswordUseCaseProxy.getInstance().execute(forgotPasswordDto);
+    return 'success';
   }
 }
