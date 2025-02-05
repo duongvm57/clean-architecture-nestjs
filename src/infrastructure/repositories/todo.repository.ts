@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TodoM } from '../../domain/model/todo';
-import { TodoRepository } from '../../domain/repositories/todoRepository.interface';
+import { TodoRepository } from '../../domain/repositories/todo.repository.interface';
 import { Todo } from '../entities/todo.entity';
 
 @Injectable()

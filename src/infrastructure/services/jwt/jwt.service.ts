@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
 import { IJwtService, IJwtServicePayload } from '../../../domain/adapters/jwt.interface';
 
 @Injectable()
@@ -16,6 +16,14 @@ export class JwtTokenService implements IJwtService {
       secret: secret,
       expiresIn: expiresIn,
     });
+  }
+
+  decode(token: string): object {
+    return this.jwtService.decode(token);
+  }
+
+  verify<T extends object = any>(token: string, options?: JwtVerifyOptions): T {
+    return this.jwtService.verify(token, options);
   }
 }
 

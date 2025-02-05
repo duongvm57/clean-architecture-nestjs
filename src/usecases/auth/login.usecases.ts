@@ -2,7 +2,7 @@ import { IBcryptService } from '../../domain/adapters/bcrypt.interface';
 import { IJwtService, IJwtServicePayload } from '../../domain/adapters/jwt.interface';
 import { JWTConfig } from '../../domain/config/jwt.interface';
 import { ILogger } from '../../domain/logger/logger.interface';
-import { UserRepository } from '../../domain/repositories/userRepository.interface';
+import { UserRepository } from '../../domain/repositories/user.repository.interface';
 
 export class LoginUseCases {
   constructor(
@@ -29,8 +29,7 @@ export class LoginUseCases {
     const expiresIn = this.jwtConfig.getJwtRefreshExpirationTime() + 's';
     const token = this.jwtTokenService.createToken(payload, secret, expiresIn);
     await this.setCurrentRefreshToken(token, username);
-    const cookie = `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtRefreshExpirationTime()}`;
-    return cookie;
+    return `Refresh=${token}; HttpOnly; Path=/; Max-Age=${this.jwtConfig.getJwtRefreshExpirationTime()}`;
   }
 
   async validateUserForLocalStragtegy(username: string, pass: string) {

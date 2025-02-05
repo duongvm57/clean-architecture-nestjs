@@ -27,6 +27,7 @@ import { UseCaseProxy } from './usecases-proxy';
 import { ForgotPasswordUsecases } from '../../usecases/auth/forgot-password.usecases';
 import { MailerService } from '@nestjs-modules/mailer';
 import { MailerConfigModule } from '../config/mailer/mailer.config';
+import { JWTConfig } from '../../domain/config/jwt.interface';
 
 @Module({
   imports: [LoggerModule, JwtModule, BcryptModule, EnvironmentConfigModule, RepositoriesModule, ExceptionsModule, MailerConfigModule],
@@ -98,10 +99,16 @@ export class UsecasesProxyModule {
             new UseCaseProxy(new deleteTodoUseCases(logger, todoRepository)),
         },
         {
-          inject: [MailerService],
+          inject: [MailerService, JwtTokenService, EnvironmentConfigService, DatabaseUserRepository, BcryptService],
           provide: UsecasesProxyModule.FORGOT_PASSWORD_USECASES_PROXY,
-          useFactory: (mailerService: MailerService) =>
-            new UseCaseProxy(new ForgotPasswordUsecases(mailerService)),
+          useFactory: (
+            mailerService: MailerService,
+            jwtTokenService: JwtTokenService,
+            jwtConfig: EnvironmentConfigService,
+            userRepository: DatabaseUserRepository,
+            bcryptService: BcryptService,
+          ) =>
+            new UseCaseProxy(new ForgotPasswordUsecases(mailerService, jwtTokenService, jwtConfig, userRepository, bcryptService)),
         },
       ],
       exports: [

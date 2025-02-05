@@ -7,11 +7,10 @@ import { AllExceptionFilter } from './infrastructure/common/filter/exception.fil
 import { LoggingInterceptor } from './infrastructure/common/interceptors/logger.interceptor';
 import { ResponseFormat, ResponseInterceptor } from './infrastructure/common/interceptors/response.interceptor';
 import { LoggerService } from './infrastructure/logger/logger.service';
-import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 
 async function bootstrap() {
   const env = process.env.NODE_ENV;
-  const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+  const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
 

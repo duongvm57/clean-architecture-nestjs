@@ -78,4 +78,8 @@ export class EnvironmentConfigService implements DatabaseConfig, JWTConfig {
   getMailerDefaultMail(): string {
     return this.configService.get<string>('MAILER_DEFAULT_EMAIL');
   }
+
+  getFrontendUrl(): string {
+    return this.configService.get<string>('FRONTEND_URL');
+  }
 }

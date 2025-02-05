@@ -1,7 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index } from 'typeorm';
+import { TABLE_NAME } from '../common/constants/constant';
+import { BaseEntity } from './base.entity';
 
-@Entity()
-export class User {
+@Entity(TABLE_NAME.USERS)
+export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -9,18 +11,15 @@ export class User {
   @Column('varchar', { unique: true })
   username: string;
 
+  @Column('varchar')
+  email: string;
+
   @Column('text')
   password: string;
-
-  @CreateDateColumn({ name: 'createdate' })
-  createdate: Date;
-
-  @UpdateDateColumn({ name: 'updateddate' })
-  updateddate: Date;
 
   @Column({ nullable: true })
   last_login?: Date;
 
   @Column('varchar', { nullable: true })
-  hach_refresh_token: string;
+  hash_refresh_token: string;
 }

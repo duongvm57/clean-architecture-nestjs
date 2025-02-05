@@ -4,3 +4,4 @@ coverage
 coverage-e2e
 test/coverage
 .idea
+.env

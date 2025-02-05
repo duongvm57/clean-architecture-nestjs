@@ -19,3 +19,15 @@ export class ForgotPasswordDto {
   @IsEmail()
   readonly email: string;
 }
+
+export class ResetPasswordDto {
+  @ApiProperty({ required: true })
+  @IsNotEmpty()
+  @IsString()
+  readonly token: string;
+
+  @ApiProperty({ required: true })
+  @IsNotEmpty()
+  @IsString()
+  readonly newPassword: string;
+}

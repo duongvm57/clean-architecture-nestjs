@@ -4,7 +4,7 @@ import { JWTConfig } from '../../../domain/config/jwt.interface';
 import { IException } from '../../../domain/exceptions/exceptions.interface';
 import { ILogger } from '../../../domain/logger/logger.interface';
 import { UserM } from '../../../domain/model/user';
-import { UserRepository } from '../../../domain/repositories/userRepository.interface';
+import { UserRepository } from '../../../domain/repositories/user.repository.interface';
 import { IsAuthenticatedUseCases } from '../isAuthenticated.usecases';
 import { LoginUseCases } from '../login.usecases';
 import { LogoutUseCases } from '../logout.usecases';

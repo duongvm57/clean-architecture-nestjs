@@ -1,24 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { UserM } from '../../domain/model/user';
-import { UserRepository } from '../../domain/repositories/userRepository.interface';
+import { UserRepository } from '../../domain/repositories/user.repository.interface';
 import { User } from '../entities/user.entity';
+import { BaseRepository } from './base.repository';
+import { TABLE_NAME } from '../common/constants/constant';
+import { Repository } from 'typeorm';
 
 @Injectable()
-export class DatabaseUserRepository implements UserRepository {
+export class DatabaseUserRepository extends BaseRepository<User> implements UserRepository {
   constructor(
     @InjectRepository(User)
     private readonly userEntityRepository: Repository<User>,
-  ) {}
+  ) {
+    super(userEntityRepository, TABLE_NAME.USERS);
+  }
+
   async updateRefreshToken(username: string, refreshToken: string): Promise<void> {
     await this.userEntityRepository.update(
       {
         username: username,
       },
-      { hach_refresh_token: refreshToken },
+      { hash_refresh_token: refreshToken },
     );
   }
+
   async getUserByUsername(username: string): Promise<UserM> {
     const adminUserEntity = await this.userEntityRepository.findOne({
       where: {
@@ -30,6 +36,7 @@ export class DatabaseUserRepository implements UserRepository {
     }
     return this.toUser(adminUserEntity);
   }
+
   async updateLastLogin(username: string): Promise<void> {
     await this.userEntityRepository.update(
       {
@@ -45,10 +52,10 @@ export class DatabaseUserRepository implements UserRepository {
     adminUser.id = adminUserEntity.id;
     adminUser.username = adminUserEntity.username;
     adminUser.password = adminUserEntity.password;
-    adminUser.createDate = adminUserEntity.createdate;
-    adminUser.updatedDate = adminUserEntity.updateddate;
+    adminUser.createDate = adminUserEntity.created_at;
+    adminUser.updatedDate = adminUserEntity.updated_at;
     adminUser.lastLogin = adminUserEntity.last_login;
-    adminUser.hashRefreshToken = adminUserEntity.hach_refresh_token;
+    adminUser.hashRefreshToken = adminUserEntity.hash_refresh_token;
 
     return adminUser;
   }
